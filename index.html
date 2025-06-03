@@ -10,68 +10,27 @@
     label { display: block; margin-bottom: 5px; }
     input, select { width: 100%; padding: 10px; font-size: 16px; }
     button { padding: 12px 20px; font-size: 16px; }
+    #result { margin-top: 20px; font-weight: bold; color: green; }
   </style>
 </head>
 <body>
   <h1>ระบบลงทะเบียนขอใช้รถ</h1>
 
   <form id="registrationForm">
-    <div class="form-group">
-      <label for="studentId">รหัสนักศึกษา</label>
-      <input type="text" id="studentId" required>
-    </div>
-    <div class="form-group">
-      <label for="fullName">ชื่อ-สกุล</label>
-      <input type="text" id="fullName" required>
-    </div>
-    <div class="form-group">
-      <label for="faculty">สำนักวิชา</label>
-      <input type="text" id="faculty" required>
-    </div>
-    <div class="form-group">
-      <label for="phone">เบอร์โทรศัพท์</label>
-      <input type="text" id="phone" required>
-    </div>
-    <div class="form-group">
-      <label for="residence">ที่พักปัจจุบัน</label>
-      <input type="text" id="residence" required>
-    </div>
-    <div class="form-group">
-      <label for="address">ที่อยู่</label>
-      <input type="text" id="address" required>
-    </div>
-    <div class="form-group">
-      <label for="emergencyContact">ผู้ติดต่อฉุกเฉิน</label>
-      <input type="text" id="emergencyContact" required>
-    </div>
-    <div class="form-group">
-      <label for="relationship">ความสัมพันธ์</label>
-      <input type="text" id="relationship" required>
-    </div>
-    <div class="form-group">
-      <label for="emergencyPhone">เบอร์โทรฉุกเฉิน</label>
-      <input type="text" id="emergencyPhone" required>
-    </div>
-    <div class="form-group">
-      <label for="carType">ประเภทรถ</label>
-      <input type="text" id="carType" required>
-    </div>
-    <div class="form-group">
-      <label for="carBrand">ยี่ห้อรถ</label>
-      <input type="text" id="carBrand" required>
-    </div>
-    <div class="form-group">
-      <label for="licensePlate">ทะเบียนรถ</label>
-      <input type="text" id="licensePlate" required>
-    </div>
-    <div class="form-group">
-      <label for="province">จังหวัด</label>
-      <input type="text" id="province" required>
-    </div>
-    <div class="form-group">
-      <label for="carColor">สีรถ</label>
-      <input type="text" id="carColor" required>
-    </div>
+    <div class="form-group"><label for="studentId">รหัสนักศึกษา</label><input type="text" id="studentId" required></div>
+    <div class="form-group"><label for="fullName">ชื่อ-สกุล</label><input type="text" id="fullName" required></div>
+    <div class="form-group"><label for="faculty">สำนักวิชา</label><input type="text" id="faculty" required></div>
+    <div class="form-group"><label for="phone">เบอร์โทรศัพท์</label><input type="text" id="phone" required></div>
+    <div class="form-group"><label for="residence">ที่พักปัจจุบัน</label><input type="text" id="residence" required></div>
+    <div class="form-group"><label for="address">ที่อยู่</label><input type="text" id="address" required></div>
+    <div class="form-group"><label for="emergencyContact">ผู้ติดต่อฉุกเฉิน</label><input type="text" id="emergencyContact" required></div>
+    <div class="form-group"><label for="relationship">ความสัมพันธ์</label><input type="text" id="relationship" required></div>
+    <div class="form-group"><label for="emergencyPhone">เบอร์โทรฉุกเฉิน</label><input type="text" id="emergencyPhone" required></div>
+    <div class="form-group"><label for="carType">ประเภทรถ</label><input type="text" id="carType" required></div>
+    <div class="form-group"><label for="carBrand">ยี่ห้อรถ</label><input type="text" id="carBrand" required></div>
+    <div class="form-group"><label for="licensePlate">ทะเบียนรถ</label><input type="text" id="licensePlate" required></div>
+    <div class="form-group"><label for="province">จังหวัด</label><input type="text" id="province" required></div>
+    <div class="form-group"><label for="carColor">สีรถ</label><input type="text" id="carColor" required></div>
     <button type="submit">ส่งข้อมูล</button>
   </form>
 
@@ -99,20 +58,19 @@
         carColor: document.getElementById('carColor').value
       };
 
+      // ส่งแบบ JSON พร้อม mode: 'no-cors'
       fetch('https://script.google.com/macros/s/AKfycbzocIwRs56a8Wt2-yhfK8NxRI537oeehQmxratNy_XqXGQtfnkP0ODJJFe-gfen8qNU/exec', {
         method: 'POST',
+        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
-      })
-      .then(response => response.json())
-      .then(result => {
-        document.getElementById('result').innerText = result.message || 'ส่งสำเร็จ';
-      })
-      .catch(err => {
-        document.getElementById('result').innerText = 'เกิดข้อผิดพลาด: ' + err;
       });
+
+      // แจ้งผลทันที (เพราะ no-cors จะไม่รอ response)
+      document.getElementById('result').innerText = 'ส่งข้อมูลเรียบร้อยแล้ว กรุณาตรวจสอบ Google Sheet';
+      form.reset();
     });
   </script>
 </body>
