@@ -219,6 +219,17 @@
                             pattern="0[0-9]{9}" title="กรุณากรอกเบอร์โทรศัพท์ 10 หลัก ขึ้นต้นด้วยเลข 0">
                         <p class="text-xs text-gray-500 mt-1">กรอกเป็นตัวเลข 10 หลัก ขึ้นต้นด้วยเลข 0</p>
                     </div>
+
+                    <div>
+                        <label for="drivingLicense" class="block text-sm font-medium text-gray-700 mb-1">ใบอนุญาตขับรถ <span class="text-red-500">*</span></label>
+                        <select id="drivingLicense" name="drivingLicense" required 
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="" disabled selected>-- เลือกสถานะใบอนุญาตขับรถ --</option>
+                            <option value="มีใบอนุญาตขับรถที่ขอขึ้นทะเบียนแล้ว">มีใบอนุญาตขับรถที่ขอขึ้นทะเบียนแล้ว</option>
+                            <option value="ไม่มีใบอนุญาตขับรถที่ขอขึ้นทะเบียน">ไม่มีใบอนุญาตขับรถที่ขอขึ้นทะเบียน</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1">ใบอนุญาตขับรถต้องตรงกับชนิดรถที่ขึ้นทะเบียน เช่น ขึ้นทะเบียนรถจักรยานยนต์ ต้องมีใบอนุญาตขับรถจักรยานยนต์</p>
+                    </div>
                 </div>
             </div>
 
@@ -397,14 +408,12 @@
             <!-- คำรับรอง -->
             <div class="form-section p-6">
                 <div class="flex items-start mb-4">
-                    <div class="flex items-center h-5">
+                    <div class="flex items-center h-5 mt-1">
                         <input id="agreement" name="agreement" type="checkbox" required
                             class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-green-300">
                     </div>
                     <label for="agreement" class="ml-2 text-sm font-medium text-gray-700">
                         ขอรับรองว่าข้อมูลถูกต้องและเป็นความจริงทุกประการ หากมีเจตนาให้ข้อมูลเท็จ ข้าพเจ้ายินดีรับโทษตามระเบียบและข้อบังคับของมหาวิทยาลัยทุกประการ ข้าพเจ้ายินยอมให้ ส่วนส่งเสริมและพัฒนานักศึกษา เก็บ รวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า เพื่อวัตถุประสงค์ในการ ดำเนินการขึ้นทะเบียนรถ ใช้เป็นข้อมูลในการบริหารจัดการและควบคุมการเข้าออกพื้นที่ เพื่อประสานงานและติดต่อในกรณีที่เกิดเหตุฉุกเฉินหรือเหตุการณ์อื่นๆที่เกี่ยวข้องกับการใช้รถของข้าพเจ้า เพื่อจัดทำสถิติและรายงาน และเพื่อปฏิบัติตามระเบียบ ข้อบังคับ และกฎหมายที่เกี่ยวข้อง
-
-
                     </label>
                 </div>
                 
@@ -553,6 +562,7 @@
                 formData.append('emergencyContact', document.getElementById('emergencyContact').value);
                 formData.append('relationship', document.getElementById('relationship').value);
                 formData.append('emergencyPhone', document.getElementById('emergencyPhone').value);
+                formData.append('drivingLicense', document.getElementById('drivingLicense').value); // เพิ่มข้อมูลใบอนุญาตขับรถ
                 formData.append('vehicleType', document.getElementById('vehicleType').value);
                 formData.append('brand', document.getElementById('brand').value);
                 formData.append('model', document.getElementById('model').value); // เพิ่มรุ่นรถ
@@ -631,5 +641,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95013d78660aa1ae',t:'MTc0OTk4MTgzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95018f6f960f8954',t:'MTc0OTk4NTE5MC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
