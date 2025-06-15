@@ -66,6 +66,7 @@
         .example-link:hover {
             color: #8BC34A;
         }
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -76,17 +77,20 @@
             height: 100%;
             overflow: auto;
             background-color: rgba(0,0,0,0.7);
+            padding-top: 60px;
         }
         .modal-content {
             margin: auto;
             display: block;
-            max-width: 90%;
-            max-height: 90%;
+            width: 80%;
+            max-width: 700px;
+            max-height: 80vh;
+            object-fit: contain;
         }
         .close {
             position: absolute;
             top: 15px;
-            right: 25px;
+            right: 35px;
             color: #f1f1f1;
             font-size: 40px;
             font-weight: bold;
@@ -102,6 +106,9 @@
         @media (max-width: 640px) {
             .container {
                 padding: 0 10px;
+            }
+            .modal-content {
+                width: 95%;
             }
         }
     </style>
@@ -410,7 +417,7 @@
     <!-- Modal สำหรับแสดงตัวอย่างภาพ -->
     <div id="exampleModal" class="modal">
         <span class="close">&times;</span>
-        <img class="modal-content" id="exampleImage" src="https://drive.google.com/uc?export=view&id=1IvgdLVvawU4j5VdAgs4tbTVPMKm4ZaWf" alt="ตัวอย่างภาพถ่ายรถ 4 ด้าน">
+        <img class="modal-content" id="exampleImage" src="" alt="ตัวอย่างภาพถ่ายรถ 4 ด้าน">
     </div>
 
     <script>
@@ -603,8 +610,20 @@
         const showExampleBtn = document.getElementById("showExampleImages");
         const closeBtn = document.getElementsByClassName("close")[0];
 
+        // แปลง Google Drive URL เป็นรูปแบบที่สามารถแสดงผลได้
+        function getGoogleDriveImageUrl(url) {
+            // ดึง ID จาก URL
+            const match = url.match(/[-\w]{25,}/);
+            if (match && match[0]) {
+                return `https://drive.google.com/uc?export=view&id=${match[0]}`;
+            }
+            return url;
+        }
+
         // เมื่อคลิกที่ลิงก์ตัวอย่างภาพ
         showExampleBtn.onclick = function() {
+            const imageUrl = getGoogleDriveImageUrl("https://drive.google.com/file/d/1IvgdLVvawU4j5VdAgs4tbTVPMKm4ZaWf/view?usp=sharing");
+            modalImg.src = imageUrl;
             modal.style.display = "block";
         }
 
@@ -620,5 +639,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'950103f157d68960',t:'MTc0OTk3OTQ3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'950117b7b6fa8941',t:'MTc0OTk4MDI4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
