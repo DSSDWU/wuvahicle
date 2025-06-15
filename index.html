@@ -402,7 +402,9 @@
                             class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-green-300">
                     </div>
                     <label for="agreement" class="ml-2 text-sm font-medium text-gray-700">
-                        ขอรับรองว่าข้อมูลถูกต้องและเป็นความจริงทุกประการ หากมีเจตนาให้ข้อมูลเท็จ ข้าพเจ้ายินดีรับโทษตามระเบียบและข้อบังคับของมหาวิทยาลัยทุกประการ
+                        ขอรับรองว่าข้อมูลถูกต้องและเป็นความจริงทุกประการ หากมีเจตนาให้ข้อมูลเท็จ ข้าพเจ้ายินดีรับโทษตามระเบียบและข้อบังคับของมหาวิทยาลัยทุกประการ ข้าพเจ้ายินยอมให้ ส่วนส่งเสริมและพัฒนานักศึกษา เก็บ รวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคลของข้าพเจ้า เพื่อวัตถุประสงค์ในการ ดำเนินการขึ้นทะเบียนรถ ใช้เป็นข้อมูลในการบริหารจัดการและควบคุมการเข้าออกพื้นที่ เพื่อประสานงานและติดต่อในกรณีที่เกิดเหตุฉุกเฉินหรือเหตุการณ์อื่นๆที่เกี่ยวข้องกับการใช้รถของข้าพเจ้า เพื่อจัดทำสถิติและรายงาน และเพื่อปฏิบัติตามระเบียบ ข้อบังคับ และกฎหมายที่เกี่ยวข้อง
+
+ 
                     </label>
                 </div>
                 
@@ -610,20 +612,10 @@
         const showExampleBtn = document.getElementById("showExampleImages");
         const closeBtn = document.getElementsByClassName("close")[0];
 
-        // แปลง Google Drive URL เป็นรูปแบบที่สามารถแสดงผลได้
-        function getGoogleDriveImageUrl(url) {
-            // ดึง ID จาก URL
-            const match = url.match(/[-\w]{25,}/);
-            if (match && match[0]) {
-                return `https://drive.google.com/uc?export=view&id=${match[0]}`;
-            }
-            return url;
-        }
-
         // เมื่อคลิกที่ลิงก์ตัวอย่างภาพ
         showExampleBtn.onclick = function() {
-            const imageUrl = getGoogleDriveImageUrl("https://drive.google.com/file/d/1IvgdLVvawU4j5VdAgs4tbTVPMKm4ZaWf/view?usp=sharing");
-            modalImg.src = imageUrl;
+            // ใช้ URL ที่แก้ไขแล้ว
+            modalImg.src = "https://dssd.wu.ac.th/wp-content/uploads/2025/06/ตัวอย่างภาพถ่ายรถ-4-ด้าน.png";
             modal.style.display = "block";
         }
 
@@ -639,5 +631,5 @@
             }
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'950117b7b6fa8941',t:'MTc0OTk4MDI4Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95013d78660aa1ae',t:'MTc0OTk4MTgzMy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
