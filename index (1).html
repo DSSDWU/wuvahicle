@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ระบบขึ้นทะเบียนขอใช้รถ มวล.</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <style>
+    body {
+      background: #f6fff6;
+      font-family: 'Prompt', 'Kanit', Arial, sans-serif;
+      color: #1a3e20;
+      margin: 0;
+    }
+    .container {
+      max-width: 600px;
+      background: #fff;
+      margin: 24px auto;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px #a2d5a5;
+      padding: 32px 20px;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 16px auto;
+      width: 80px;
+      height: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 18px;
+      font-size: 1.4rem;
+    }
+    label {
+      font-weight: 500;
+      margin-bottom: 4px;
+      display: block;
+    }
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      border: 1px solid #b2dfdb;
+      font-size: 1em;
+    }
+    .file-upload-preview {
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .file-upload-preview img {
+      max-width: 110px;
+      max-height: 80px;
+      margin: 6px;
+      border-radius: 7px;
+      border: 1px solid #d9eeda;
+    }
+    .checkbox-label {
+      display: flex;
+      align-items: flex-start;
+      font-size: 0.98em;
+      margin-bottom: 18px;
+    }
+    .checkbox-label input { margin-right: 6px; }
+    button[type="submit"] {
+      background: #69d076;
+      color: #fff;
+      border: none;
+      padding: 13px 0;
+      border-radius: 6px;
+      font-size: 1.18em;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    button[type="submit"]:disabled {
+      background: #c8e6c9;
+      color: #888;
+      cursor: not-allowed;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 16px 2vw; }
+      h1 { font-size: 1.1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img src="https://www.wu.ac.th/uploads/logoWU_1631668089.png" class="logo" alt="โลโก้มวล." />
+    <h1>ระบบบันทึกข้อมูลการขึ้นทะเบียนขอใช้รถ<br>มหาวิทยาลัยวลัยลักษณ์</h1>
+    <form id="vahicleForm" enctype="multipart/form-data" autocomplete="off">
+      <!-- ส่วนที่ 1: ข้อมูลส่วนตัว -->
+      <label>รหัสนักศึกษา <span style="color:red">*</span></label>
+      <input type="text" name="student_id" maxlength="8" required pattern="^[0-9]{8}$" placeholder="8 หลักตัวเลข" inputmode="numeric">
+      
+      <label>ชื่อ-สกุล <span style="color:red">*</span></label>
+      <input type="text" name="fullname" required>
+
+      <label>สำนักวิชา <span style="color:red">*</span></label>
+      <select name="faculty" required>
+        <option value="">--เลือก--</option>
+        <option>การจัดการ</option>
+        <option>การบัญชีและการเงิน</option>
+        <option>เทคโนโลยีการเกษตรและอุตสาหกรรมอาหาร</option>
+        <option>นิติศาสตร์</option>
+        <option>พยาบาลศาสตร์</option>
+        <option>แพทยศาสตร์</option>
+        <option>เภสัชศาสตร์</option>
+        <option>รัฐศาสตร์และรัฐประศาสนศาสตร์</option>
+        <option>วิทยาศาสตร์</option>
+        <option>วิศวกรรมศาสตร์และเทคโนโลยี</option>
+        <option>ศึกษาศาสตร์</option>
+        <option>ศิลปศาสตร์</option>
+        <option>สถาปัตยกรรมศาสตร์และการออกแบบ</option>
+        <option>สหเวชศาสตร์</option>
+        <option>สาธารณสุขศาสตร์</option>
+        <option>สารสนเทศศาสตร์</option>
+        <option>วิทยาลัยทันตแพทยศาสตร์นานาชาติ</option>
+        <option>วิทยาลัยนานาชาติ</option>
+        <option>วิทยาลัยสัตวแพทยศาสตร์อัครราชกุมารี</option>
+      </select>
+
+      <label>เบอร์โทรศัพท์ <span style="color:red">*</span></label>
+      <input type="tel" name="phone" maxlength="10" required pattern="^0[0-9]{9}$" placeholder="เช่น 0812345678" inputmode="numeric">
+
+      <label>ที่พักปัจจุบัน <span style="color:red">*</span></label>
+      <select name="accommodation" required>
+        <option value="">--เลือก--</option>
+        <option>หอพักภายในมหาวิทยาลัย</option>
+        <option>หอพักภายนอกมหาวิทยาลัย</option>
+        <option>บ้านตนเอง</option>
+      </select>
+
+      <label>ชื่อหอพัก/หมายเลขห้อง/บ้านเลขที่ <span style="color:red">*</span></label>
+      <input type="text" name="accommodation_detail" required>
+      <small style="color: #4caf50;">กรณีหอพักภายในหรือภายนอก ให้กรอกชื่อหอพักและหมายเลขห้อง กรณีบ้านพักให้กรอกบ้านเลขที่และที่อยู่</small>
+
+      <label>ชื่อ-สกุล ผู้ติดต่อกรณีฉุกเฉิน <span style="color:red">*</span></label>
+      <input type="text" name="emergency_name" required>
+
+      <label>ความสัมพันธ์กับนักศึกษา <span style="color:red">*</span></label>
+      <select name="emergency_relation" required>
+        <option value="">--เลือก--</option>
+        <option>บิดา/มารดา</option>
+        <option>ผู้ปกครอง</option>
+        <option>ญาติ</option>
+        <option>เพื่อน</option>
+      </select>
+
+      <label>เบอร์โทรศัพท์ผู้ติดต่อกรณีฉุกเฉิน <span style="color:red">*</span></label>
+      <input type="tel" name="emergency_phone" maxlength="10" required pattern="^0[0-9]{9}$" placeholder="เช่น 0812345678" inputmode="numeric">
+
+      <!-- ส่วนที่ 2: ข้อมูลรถ -->
+      <hr style="margin: 18px 0;">
+      <label>ประเภทรถ <span style="color:red">*</span></label>
+      <select name="vehicle_type" required>
+        <option value="">--เลือก--</option>
+        <option>รถยนต์(น้ำมัน)</option>
+        <option>รถยนต์ไฟฟ้า</option>
+        <option>รถจักรยานยนต์ไฟฟ้า</option>
+      </select>
+
+      <label>ยี่ห้อรถ <span style="color:red">*</span></label>
+      <input type="text" name="vehicle_brand" required>
+
+      <label>เลขทะเบียนรถ <span style="color:red">*</span></label>
+      <input type="text" name="vehicle_plate" required>
+      <small style="color: #4caf50;">กรณีรถป้ายแดงให้กรอกว่า “ป้ายแดง” กรณีเป็นรถที่ไม่สามารถจดทะเบียนได้ให้กรอกว่า “ไม่สามารถจดทะเบียนได้”</small>
+
+      <label>จังหวัด <span style="color:red">*</span></label>
+      <select name="vehicle_province" required>
+        <option value="">--เลือก--</option>
+        <option>ป้ายแดง</option>
+        <option>ไม่สามารถจดทะเบียนได้</option>
+        <option>กรุงเทพมหานคร</option>
+        <option>กระบี่</option>
+        <option>กาญจนบุรี</option>
+        <option>กาฬสินธุ์</option>
+        <option>กำแพงเพชร</option>
+        <option>ขอนแก่น</option>
+        <option>จันทบุรี</option>
+        <option>ฉะเชิงเทรา</option>
+        <option>ชลบุรี</option>
+        <option>ชัยนาท</option>
+        <option>ชัยภูมิ</option>
+        <option>ชุมพร</option>
+        <option>เชียงราย</option>
+        <option>เชียงใหม่</option>
+        <option>ตรัง</option>
+        <option>ตราด</option>
+        <option>ตาก</option>
+        <option>นครนายก</option>
+        <option>นครปฐม</option>
+        <option>นครพนม</option>
+        <option>นครราชสีมา</option>
+        <option>นครศรีธรรมราช</option>
+        <option>นครสวรรค์</option>
+        <option>นนทบุรี</option>
+        <option>นราธิวาส</option>
+        <option>น่าน</option>
+        <option>บึงกาฬ</option>
+        <option>บุรีรัมย์</option>
+        <option>ปทุมธานี</option>
+        <option>ประจวบคีรีขันธ์</option>
+        <option>ปราจีนบุรี</option>
+        <option>ปัตตานี</option>
+        <option>พระนครศรีอยุธยา</option>
+        <option>พังงา</option>
+        <option>พัทลุง</option>
+        <option>พิจิตร</option>
+        <option>พิษณุโลก</option>
+        <option>เพชรบุรี</option>
+        <option>เพชรบูรณ์</option>
+        <option>แพร่</option>
+        <option>พะเยา</option>
+        <option>ภูเก็ต</option>
+        <option>มหาสารคาม</option>
+        <option>มุกดาหาร</option>
+        <option>แม่ฮ่องสอน</option>
+        <option>ยโสธร</option>
+        <option>ยะลา</option>
+        <option>ร้อยเอ็ด</option>
+        <option>ระนอง</option>
+        <option>ระยอง</option>
+        <option>ราชบุรี</option>
+        <option>ลพบุรี</option>
+        <option>ลำปาง</option>
+        <option>ลำพูน</option>
+        <option>เลย</option>
+        <option>ศรีสะเกษ</option>
+        <option>สกลนคร</option>
+        <option>สงขลา</option>
+        <option>สตูล</option>
+        <option>สมุทรปราการ</option>
+        <option>สมุทรสงคราม</option>
+        <option>สมุทรสาคร</option>
+        <option>สระแก้ว</option>
+        <option>สระบุรี</option>
+        <option>สิงห์บุรี</option>
+        <option>สุโขทัย</option>
+        <option>สุพรรณบุรี</option>
+        <option>สุราษฎร์ธานี</option>
+        <option>สุรินทร์</option>
+        <option>หนองคาย</option>
+        <option>หนองบัวลำภู</option>
+        <option>อ่างทอง</option>
+        <option>อำนาจเจริญ</option>
+        <option>อุดรธานี</option>
+        <option>อุตรดิตถ์</option>
+        <option>อุทัยธานี</option>
+        <option>อุบลราชธานี</option>
+      </select>
+
+      <label>สีรถ <span style="color:red">*</span></label>
+      <input type="text" name="vehicle_color" required>
+      <small style="color: #4caf50;">สีตามคู่มือรถหรือตอบสีที่เห็นได้ชัดเจนที่สุด 2 สี</small>
+
+      <!-- Upload Images -->
+      <label>ภาพถ่ายรถด้านหน้า <span style="color:red">*</span></label>
+      <input type="file" name="img_front" accept="image/*" required>
+      <div class="file-upload-preview" id="preview-front"></div>
+      
+      <label>ภาพถ่ายรถด้านหลัง <span style="color:red">*</span></label>
+      <input type="file" name="img_back" accept="image/*" required>
+      <div class="file-upload-preview" id="preview-back"></div>
+
+      <label>ภาพถ่ายรถด้านข้างฝั่งซ้าย <span style="color:red">*</span></label>
+      <input type="file" name="img_left" accept="image/*" required>
+      <div class="file-upload-preview" id="preview-left"></div>
+
+      <label>ภาพถ่ายรถด้านข้างฝั่งขวา <span style="color:red">*</span></label>
+      <input type="file" name="img_right" accept="image/*" required>
+      <div class="file-upload-preview" id="preview-right"></div>
+
+      <!-- Checkbox รับรองความถูกต้อง -->
+      <label class="checkbox-label">
+        <input type="checkbox" id="confirm" required>
+        <span>ขอรับรองว่าข้อมูลถูกต้องและเป็นความจริงทุกประการ หากมีเจตนาให้ข้อมูลเท็จ ข้าพเจ้ายินดีรับโทษตามระเบียบและข้อบังคับของมหาวิทยาลัยทุกประการ</span>
+      </label>
+
+      <button type="submit" id="submitBtn" disabled>ส่งข้อมูล</button>
+    </form>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Enable button when checkbox checked
+    document.getElementById('confirm').addEventListener('change', function() {
+      document.getElementById('submitBtn').disabled = !this.checked;
+    });
+
+    // Image preview
+    function previewImage(input, previewId) {
+      const preview = document.getElementById(previewId);
+      preview.innerHTML = '';
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > 10485760) { // 10MB
+          Swal.fire('ขนาดไฟล์ไม่เกิน 10MB', '', 'error');
+          input.value = '';
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+    document.querySelector('input[name="img_front"]').addEventListener('change', function() {
+      previewImage(this, 'preview-front');
+    });
+    document.querySelector('input[name="img_back"]').addEventListener('change', function() {
+      previewImage(this, 'preview-back');
+    });
+    document.querySelector('input[name="img_left"]').addEventListener('change', function() {
+      previewImage(this, 'preview-left');
+    });
+    document.querySelector('input[name="img_right"]').addEventListener('change', function() {
+      previewImage(this, 'preview-right');
+    });
+
+    // Form validation and submit
+    document.getElementById('vahicleForm').onsubmit = async function(e) {
+      e.preventDefault();
+      // Validate numeric fields
+      const studentId = this.student_id.value.trim();
+      const phone = this.phone.value.trim();
+      const emerPhone = this.emergency_phone.value.trim();
+      if (!/^[0-9]{8}$/.test(studentId)) {
+        Swal.fire('รหัสนักศึกษาต้องเป็นตัวเลข 8 หลัก', '', 'error'); return;
+      }
+      if (!/^0[0-9]{9}$/.test(phone)) {
+        Swal.fire('เบอร์โทรศัพท์ต้องขึ้นต้นด้วย 0 และมี 10 หลัก', '', 'error'); return;
+      }
+      if (!/^0[0-9]{9}$/.test(emerPhone)) {
+        Swal.fire('เบอร์โทรฉุกเฉินต้องขึ้นต้นด้วย 0 และมี 10 หลัก', '', 'error'); return;
+      }
+
+      // Validate file size and type
+      const files = [
+        this.img_front.files[0],
+        this.img_back.files[0],
+        this.img_left.files[0],
+        this.img_right.files[0]
+      ];
+      for (let f of files) {
+        if (!f || !f.type.startsWith('image/') || f.size > 10485760) {
+          Swal.fire('กรุณาแนบไฟล์ภาพแต่ละด้าน ขนาดไม่เกิน 10MB', '', 'error');
+          return;
+        }
+      }
+
+      // Prepare FormData
+      const fd = new FormData(this);
+      Swal.fire({title:'กำลังบันทึกข้อมูล', text:'โปรดรอสักครู่...', allowOutsideClick:false, allowEscapeKey:false, didOpen:()=>Swal.showLoading()});
+
+      // ส่งข้อมูลไป Google Apps Script
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbxh12czKMWmDaV839JzY7pu9cWbTN_ARSHU3-RY4by-FGOiBGKhQHtbyBokzHQcUpxf1w/exec", {
+          method: "POST",
+          body: fd
+        });
+        const res = await response.json();
+        if(res.status === "success") {
+          Swal.fire('บันทึกสำเร็จ!', 'ข้อมูลของคุณถูกส่งเรียบร้อย', 'success');
+          this.reset();
+          document.getElementById('submitBtn').disabled = true;
+          document.getElementById('preview-front').innerHTML = '';
+          document.getElementById('preview-back').innerHTML = '';
+          document.getElementById('preview-left').innerHTML = '';
+          document.getElementById('preview-right').innerHTML = '';
+        } else {
+          Swal.fire('เกิดข้อผิดพลาด', res.message || 'ไม่สามารถบันทึกข้อมูลได้', 'error');
+        }
+      } catch(e) {
+        Swal.fire('ข้อผิดพลาด', 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้', 'error');
+      }
+    };
+  </script>
+</body>
+</html>
