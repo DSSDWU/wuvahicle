@@ -304,7 +304,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             onchange="previewImage(this, 'frontImagePreview')">
                         <img id="frontImagePreview" class="image-preview" alt="ภาพตัวอย่างด้านหน้า">
-                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 10 MB</p>
+                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 5 MB</p>
                     </div>
 
                     <div>
@@ -313,7 +313,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             onchange="previewImage(this, 'backImagePreview')">
                         <img id="backImagePreview" class="image-preview" alt="ภาพตัวอย่างด้านหลัง">
-                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 10 MB</p>
+                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 5 MB</p>
                     </div>
 
                     <div>
@@ -322,7 +322,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             onchange="previewImage(this, 'leftImagePreview')">
                         <img id="leftImagePreview" class="image-preview" alt="ภาพตัวอย่างด้านข้างซ้าย">
-                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 10 MB</p>
+                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 5 MB</p>
                     </div>
 
                     <div>
@@ -331,7 +331,7 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                             onchange="previewImage(this, 'rightImagePreview')">
                         <img id="rightImagePreview" class="image-preview" alt="ภาพตัวอย่างด้านข้างขวา">
-                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 10 MB</p>
+                        <p class="text-xs text-gray-500 mt-1">ขนาดไฟล์ไม่เกิน 5 MB</p>
                     </div>
                 </div>
             </div>
@@ -363,12 +363,12 @@
             const file = input.files[0];
             
             if (file) {
-                // ตรวจสอบขนาดไฟล์ (ไม่เกิน 10MB)
-                if (file.size > 10 * 1024 * 1024) {
+                // ตรวจสอบขนาดไฟล์ (ไม่เกิน 5MB)
+                if (file.size > 5 * 1024 * 1024) {
                     Swal.fire({
                         icon: 'error',
                         title: 'ขนาดไฟล์เกินกำหนด',
-                        text: 'กรุณาอัปโหลดไฟล์ขนาดไม่เกิน 10MB',
+                        text: 'กรุณาอัปโหลดไฟล์ขนาดไม่เกิน 5MB',
                         confirmButtonColor: '#8BC34A'
                     });
                     input.value = '';
@@ -387,8 +387,18 @@
             }
         }
 
+        // ฟังก์ชันสำหรับแปลงรูปภาพเป็น base64
+        async function getBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
         // ตรวจสอบความถูกต้องของข้อมูล
-        document.getElementById('vehicleRegistrationForm').addEventListener('submit', function(e) {
+        document.getElementById('vehicleRegistrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             // ตรวจสอบรหัสนักศึกษา
@@ -431,11 +441,11 @@
             const imageInputs = ['frontImage', 'backImage', 'leftImage', 'rightImage'];
             for (const inputId of imageInputs) {
                 const input = document.getElementById(inputId);
-                if (input.files[0] && input.files[0].size > 10 * 1024 * 1024) {
+                if (input.files[0] && input.files[0].size > 5 * 1024 * 1024) {
                     Swal.fire({
                         icon: 'error',
                         title: 'ขนาดไฟล์เกินกำหนด',
-                        text: `กรุณาอัปโหลดไฟล์ ${input.labels[0].textContent} ขนาดไม่เกิน 10MB`,
+                        text: `กรุณาอัปโหลดไฟล์ ${input.labels[0].textContent} ขนาดไม่เกิน 5MB`,
                         confirmButtonColor: '#8BC34A'
                     });
                     return;
@@ -452,24 +462,56 @@
                 }
             });
             
-            // สร้าง FormData สำหรับส่งข้อมูล
-            const formData = new FormData(this);
-            
-            // เพิ่มข้อมูลเวลาที่ส่ง
-            formData.append('timestamp', new Date().toISOString());
-            
-            // ส่งข้อมูลไปยัง Google Apps Script
-            fetch('https://script.google.com/macros/s/AKfycbxh12czKMWmDaV839JzY7pu9cWbTN_ARSHU3-RY4by-FGOiBGKhQHtbyBokzHQcUpxf1w/exec', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
+            try {
+                // แปลงรูปภาพเป็น base64
+                const frontImageFile = document.getElementById('frontImage').files[0];
+                const backImageFile = document.getElementById('backImage').files[0];
+                const leftImageFile = document.getElementById('leftImage').files[0];
+                const rightImageFile = document.getElementById('rightImage').files[0];
+                
+                const frontImageBase64 = frontImageFile ? await getBase64(frontImageFile) : '';
+                const backImageBase64 = backImageFile ? await getBase64(backImageFile) : '';
+                const leftImageBase64 = leftImageFile ? await getBase64(leftImageFile) : '';
+                const rightImageBase64 = rightImageFile ? await getBase64(rightImageFile) : '';
+                
+                // สร้าง FormData สำหรับส่งข้อมูล
+                const formData = new FormData();
+                
+                // เพิ่มข้อมูลทั่วไป
+                formData.append('studentId', document.getElementById('studentId').value);
+                formData.append('fullName', document.getElementById('fullName').value);
+                formData.append('faculty', document.getElementById('faculty').value);
+                formData.append('phone', document.getElementById('phone').value);
+                formData.append('residence', document.getElementById('residence').value);
+                formData.append('address', document.getElementById('address').value);
+                formData.append('emergencyContact', document.getElementById('emergencyContact').value);
+                formData.append('relationship', document.getElementById('relationship').value);
+                formData.append('emergencyPhone', document.getElementById('emergencyPhone').value);
+                formData.append('vehicleType', document.getElementById('vehicleType').value);
+                formData.append('brand', document.getElementById('brand').value);
+                formData.append('licensePlate', document.getElementById('licensePlate').value);
+                formData.append('province', document.getElementById('province').value);
+                formData.append('color', document.getElementById('color').value);
+                formData.append('timestamp', new Date().toISOString());
+                
+                // เพิ่มข้อมูลรูปภาพ
+                formData.append('frontImage', frontImageBase64);
+                formData.append('backImage', backImageBase64);
+                formData.append('leftImage', leftImageBase64);
+                formData.append('rightImage', rightImageBase64);
+                
+                // ส่งข้อมูลไปยัง Google Apps Script
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxh12czKMWmDaV839JzY7pu9cWbTN_ARSHU3-RY4by-FGOiBGKhQHtbyBokzHQcUpxf1w/exec', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error('เกิดข้อผิดพลาดในการส่งข้อมูล');
                 }
-                throw new Error('เกิดข้อผิดพลาดในการส่งข้อมูล');
-            })
-            .then(data => {
+                
+                const data = await response.json();
+                
                 if (data.result === 'success') {
                     Swal.fire({
                         icon: 'success',
@@ -487,16 +529,15 @@
                 } else {
                     throw new Error(data.error || 'เกิดข้อผิดพลาดในการส่งข้อมูล');
                 }
-            })
-            .catch(error => {
+            } catch (error) {
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
                     text: error.message,
                     confirmButtonColor: '#8BC34A'
                 });
-            });
+            }
         });
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'95007669c453894d',t:'MTc0OTk3MzY3OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9500a09984c2a1ba',t:'MTc0OTk3NTQwOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
