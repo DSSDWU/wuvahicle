@@ -1,3 +1,4 @@
+html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -312,28 +313,22 @@
     <script>
         // =================================================================
         // CONFIGURATION
-        // TODO: ให้แก้ไขเป็น URL ของท่านที่ได้จากการ Deploy ใน Google App Script
+        // TODO: วาง URL ใหม่ที่ได้จากการ Deploy ในขั้นตอนที่ 2 ที่นี่
         // =================================================================
-        const GAS_URL = 'https://script.google.com/macros/s/AKfycbxamZZuigROMps_aw8bRCVkTkSCLdetdO5LLjk_GETtXWrUVs0OS39PjTpHkEeSvFzb9g/exec';
+        const GAS_URL = 'YOUR_NEW_WEB_APP_URL_HERE';
 
         // =================================================================
-        // DOM ELEMENTS
+        // DOM ELEMENTS (No changes here)
         // =================================================================
         const form = document.getElementById('vehicleForm');
         const submitBtn = document.getElementById('submitBtn');
         const confirmationCheckbox = document.getElementById('confirmation');
-        
-        // Input fields
         const studentIdInput = document.getElementById('studentId');
         const phoneInput = document.getElementById('phone');
         const emergencyPhoneInput = document.getElementById('emergencyPhone');
-
-        // Error messages
         const studentIdError = document.getElementById('studentIdError');
         const phoneError = document.getElementById('phoneError');
         const emergencyPhoneError = document.getElementById('emergencyPhoneError');
-
-        // Image previews
         const imageInputs = {
             frontImage: document.getElementById('frontImagePreview'),
             backImage: document.getElementById('backImagePreview'),
@@ -342,13 +337,12 @@
         };
 
         // =================================================================
-        // VALIDATION LOGIC
+        // VALIDATION LOGIC (No changes here)
         // =================================================================
         const validators = {
             studentId: (value) => /^\d{8}$/.test(value),
             phone: (value) => /^0\d{9}$/.test(value),
         };
-
         function validateField(input, errorElement, validator) {
             if (validator(input.value)) {
                 errorElement.classList.add('hidden');
@@ -360,27 +354,21 @@
                 return false;
             }
         }
-
         studentIdInput.addEventListener('input', () => validateField(studentIdInput, studentIdError, validators.studentId));
         phoneInput.addEventListener('input', () => validateField(phoneInput, phoneError, validators.phone));
         emergencyPhoneInput.addEventListener('input', () => validateField(emergencyPhoneInput, emergencyPhoneError, validators.phone));
 
         // =================================================================
-        // IMAGE HANDLING
+        // IMAGE HANDLING (No changes here)
         // =================================================================
         function handleFileChange(event) {
             const input = event.target;
             const preview = document.getElementById(input.id + 'Preview');
             const file = input.files[0];
-
             if (file) {
-                if (file.size > 10 * 1024 * 1024) { // 10 MB limit
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ไฟล์ใหญ่เกินไป',
-                        text: 'กรุณาเลือกไฟล์ภาพขนาดไม่เกิน 10 MB',
-                    });
-                    input.value = ''; // Clear the input
+                if (file.size > 10 * 1024 * 1024) {
+                    Swal.fire({ icon: 'error', title: 'ไฟล์ใหญ่เกินไป', text: 'กรุณาเลือกไฟล์ภาพขนาดไม่เกิน 10 MB' });
+                    input.value = '';
                     return;
                 }
                 const reader = new FileReader();
@@ -394,13 +382,12 @@
             }
             checkFormValidity();
         }
-
         Object.keys(imageInputs).forEach(id => {
             document.getElementById(id).addEventListener('change', handleFileChange);
         });
 
         // =================================================================
-        // FORM SUBMISSION LOGIC
+        // FORM SUBMISSION LOGIC (UPDATED)
         // =================================================================
         function checkFormValidity() {
             const isFormValid = form.checkValidity();
@@ -408,15 +395,11 @@
                 validateField(studentIdInput, studentIdError, validators.studentId) &&
                 validateField(phoneInput, phoneError, validators.phone) &&
                 validateField(emergencyPhoneInput, emergencyPhoneError, validators.phone);
-
             submitBtn.disabled = !(isFormValid && allValidatorsPass && confirmationCheckbox.checked);
         }
-
-        // Add event listeners to all inputs to check validity on change
         form.addEventListener('input', checkFormValidity);
         confirmationCheckbox.addEventListener('change', checkFormValidity);
 
-        // Function to convert file to Base64
         function toBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -428,15 +411,20 @@
 
         form.addEventListener('submit', async function(e) {
             e.preventDefault();
-            checkFormValidity(); // Final check
+            checkFormValidity();
             if (submitBtn.disabled) {
                  Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วนและถูกต้อง', 'warning');
                  return;
             }
 
+            if (GAS_URL === 'YOUR_NEW_WEB_APP_URL_HERE') {
+                Swal.fire('ตั้งค่าไม่สมบูรณ์', 'กรุณาใส่ Web App URL ในไฟล์ index.html', 'error');
+                return;
+            }
+
             Swal.fire({
                 title: 'กำลังส่งข้อมูล...',
-                text: 'กรุณารอสักครู่',
+                text: 'กรุณารอสักครู่ ระบบกำลังอัปโหลดรูปภาพ',
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
@@ -444,8 +432,14 @@
             });
 
             try {
-                // Prepare form data
-                const formData = {
+                const [frontImage, backImage, leftImage, rightImage] = await Promise.all([
+                    toBase64(document.getElementById('frontImage').files[0]),
+                    toBase64(document.getElementById('backImage').files[0]),
+                    toBase64(document.getElementById('leftImage').files[0]),
+                    toBase64(document.getElementById('rightImage').files[0])
+                ]);
+
+                const payload = {
                     studentId: studentIdInput.value,
                     fullName: document.getElementById('fullName').value,
                     faculty: document.getElementById('faculty').value,
@@ -462,72 +456,46 @@
                     licensePlate: document.getElementById('licensePlate').value,
                     province: document.getElementById('province').value,
                     vehicleColor: document.getElementById('vehicleColor').value,
-                };
-                
-                // Convert images to Base64
-                const frontImageFile = document.getElementById('frontImage').files[0];
-                const backImageFile = document.getElementById('backImage').files[0];
-                const leftImageFile = document.getElementById('leftImage').files[0];
-                const rightImageFile = document.getElementById('rightImage').files[0];
-
-                const [frontImage, backImage, leftImage, rightImage] = await Promise.all([
-                    toBase64(frontImageFile),
-                    toBase64(backImageFile),
-                    toBase64(leftImageFile),
-                    toBase64(rightImageFile)
-                ]);
-
-                const payload = {
-                    ...formData,
                     frontImage,
                     backImage,
                     leftImage,
                     rightImage,
-                    frontImageName: frontImageFile.name,
-                    backImageName: backImageFile.name,
-                    leftImageName: leftImageFile.name,
-                    rightImageName: rightImageFile.name,
+                    frontImageName: document.getElementById('frontImage').files[0].name,
+                    backImageName: document.getElementById('backImage').files[0].name,
+                    leftImageName: document.getElementById('leftImage').files[0].name,
+                    rightImageName: document.getElementById('rightImage').files[0].name,
                 };
 
-                // JSONP Request
-                const callbackName = 'jsonp_callback_' + Math.round(100000 * Math.random());
-                window[callbackName] = function(data) {
-                    delete window[callbackName];
-                    document.body.removeChild(script);
-                    if (data.status === 'success') {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'บันทึกข้อมูลสำเร็จ!',
-                            text: 'ข้อมูลของท่านถูกบันทึกเรียบร้อยแล้ว',
-                        });
-                        form.reset();
-                        // Hide previews
-                        Object.values(imageInputs).forEach(preview => preview.classList.add('hidden'));
-                        submitBtn.disabled = true;
-                    } else {
-                        throw new Error(data.message || 'เกิดข้อผิดพลาดที่ไม่รู้จัก');
-                    }
-                };
+                const response = await fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Server responded with status: ${response.status}`);
+                }
                 
-                const script = document.createElement('script');
-                const queryString = new URLSearchParams({ ...payload, callback: callbackName }).toString();
-                script.src = GAS_URL + '?' + queryString;
-                
-                script.onerror = () => {
-                     Swal.fire({
-                        icon: 'error',
-                        title: 'การเชื่อมต่อล้มเหลว',
-                        text: 'ไม่สามารถติดต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือลองใหม่อีกครั้ง',
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'บันทึกข้อมูลสำเร็จ!',
+                        text: result.message,
                     });
-                };
-
-                document.body.appendChild(script);
+                    form.reset();
+                    Object.values(imageInputs).forEach(preview => preview.classList.add('hidden'));
+                    checkFormValidity();
+                } else {
+                    throw new Error(result.message || 'เกิดข้อผิดพลาดจากเซิร์ฟเวอร์');
+                }
 
             } catch (error) {
+                console.error('Fetch Error:', error);
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
-                    text: `ไม่สามารถส่งข้อมูลได้: ${error.message}`,
+                    text: `ไม่สามารถส่งข้อมูลได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตและลองใหม่อีกครั้ง (Details: ${error.message})`,
                 });
             }
         });
